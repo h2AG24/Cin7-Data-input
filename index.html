@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xtrasure WZYT - September Sales Actuals</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
+        }
+    </script>
+    <!-- FontAwesome for iOS Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background: #050508;
+            color: #f5f5f7;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.4s, color 0.4s;
+        }
+        .light body { background: #f0f2f5; color: #1d1d1f; }
+
+        /* iOS Liquid Glass Background Orbs */
+        .liquid-bg {
+            position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.4; animation: floatOrb 18s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 550px; height: 550px; background: #007aff; top: -150px; left: -100px; }
+        .orb-2 { width: 650px; height: 650px; background: #bf5af2; bottom: -200px; right: -100px; animation-delay: -6s; }
+        .orb-3 { width: 450px; height: 450px; background: #30b0c7; top: 35%; left: 40%; animation-delay: -12s; opacity: 0.3; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(60px, 80px) scale(1.2); }
+        }
+
+        /* 2-Layer Liquid Glass Card */
+        .glass-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none; border-radius: inherit;
+        }
+        .light .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .ios-btn {
+            background: linear-gradient(135deg, #0a84ff, #0062d2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(10, 132, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transition: all 0.3s;
+        }
+        .ios-btn:hover { filter: brightness(1.1); }
+        .ios-btn:active { transform: scale(0.96); }
+
+        /* Table Styles */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th, td { border: 1px solid rgba(255, 255, 255, 0.1); padding: 9px 12px; text-align: center; font-size: 11px; }
+        .light th, .light td { border-color: rgba(0, 0, 0, 0.1); }
+        th { background: rgba(255, 255, 255, 0.05); font-weight: bold; color: #38bdf8; }
+        .light th { background: rgba(0, 0, 0, 0.05); color: #0284c7; }
+    </style>
+</head>
+<body class="p-4 md:p-8 antialiased">
+
+    <!-- Liquid Glass Floating Orbs Background -->
+    <div class="liquid-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto relative z-10">
+        <!-- Top Navigation Bar -->
+        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+            <button onclick="fetchSalesData(true)" class="flex items-center gap-2 ios-btn px-5 py-2.5 rounded-full text-xs font-semibold text-white cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Sales Data
+            </button>
+            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium glass-card text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Lightning Fast Mode
+            </div>
+            <!-- Theme Toggles -->
+            <div class="flex glass-card p-1 text-xs font-medium">
+                <button onclick="setTheme('dark')" id="darkBtn" class="px-3 py-1.5 rounded-full text-slate-400 transition">Dark</button>
+                <button onclick="setTheme('auto')" id="autoBtn" class="px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition">Auto</button>
+                <button onclick="setTheme('light')" id="lightBtn" class="px-3 py-1.5 rounded-full text-slate-400 transition">Light</button>
+            </div>
+        </div>
+
+        <!-- Header Title -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1"><i class="fa-brands fa-apple text-blue-500"></i> Xtrasure WZYT Sales Actuals For September</h1>
+        </div>
+        
+        <!-- Status Notification Card -->
+        <div class="mb-6 p-4 glass-card text-center text-xs" id="statusMessage">
+            <i class="fa-solid fa-bolt text-amber-400"></i> ဒေတာများကို အမြန်ဆုံး တင်ဆောင်နေပါသည်...
+        </div>
+
+        <!-- Sales Actuals Table Section -->
+        <div class="glass-card p-4 overflow-x-auto">
+            <div class="flex justify-between items-center mb-3 px-2">
+                <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-table"></i> Staff Sales Actuals Matrix</h2>
+                <span id="lastSynced" class="text-[11px] text-slate-400"></span>
+            </div>
+            <div id="tableContainer">
+                <div class="text-center text-slate-400 py-10 text-xs">
+                    <i class="fa-solid fa-cloud-arrow-down text-2xl mb-2 text-blue-500 block"></i>
+                    ဒေတာများ တွက်ချက်နေပါသည်...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiScriptUrl = "https://script.google.com/macros/s/AKfycbwLj8fUyx_ClYgcGN_5pZzERSd5mPfyAxsuN5eYkRsFDkIOKitl3aPAtG5MNX4REoFZPw/exec";
+
+        const staffList = [
+            "Thiha Thu", "Wai Lwin Aung", "Bo Bo Aung Soe", "Sai Htet Zaw", 
+            "Han Win Htoo", "Phuu Akari Zaw", "Phyu Sin Thwel", "Kyay Hmone Htoo", 
+            "Ye Thiha Aung", "Han Htoo Sett", "Aung Pyae Phyo", "Aung Kaung Pyae Phyo", "Myo Min Htike"
+        ];
+
+        const categories = ["iPhone", "MacBook", "iPad", "Watch", "Airpods & Beat", "Accessories", "Premium", "Red zone"];
+
+        window.onload = function() {
+            // Load cached data instantly if available
+            const cachedData = localStorage.getItem('wzyt_sales_cache');
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    renderSalesTable(parsed.salesData);
+                    document.getElementById('lastSynced').innerText = "Last synced: " + parsed.time;
+                    document.getElementById('statusMessage').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Local Cache မှ ဒေတာများကို ချက်ချင်း တင်ပြီးပါပြီ။`;
+                    document.getElementById('statusMessage').className = "mb-6 p-4 glass-card text-center text-xs text-emerald-400";
+                } catch(e) {}
+            }
+            // Fetch fresh data in background
+            fetchSalesData(false);
+        };
+
+        function setTheme(mode) {
+            const root = document.documentElement;
+            document.getElementById('darkBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
+            document.getElementById('autoBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
+            document.getElementById('lightBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
+
+            if (mode === 'light') {
+                root.classList.remove('dark'); root.classList.add('light');
+                document.getElementById('lightBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+            } else if (mode === 'dark') {
+                root.classList.add('dark'); root.classList.remove('light');
+                document.getElementById('darkBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+            } else {
+                root.classList.remove('light'); root.classList.add('dark');
+                document.getElementById('autoBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+            }
+        }
+
+        async function fetchSalesData(isManual = false) {
+            const statusMessage = document.getElementById('statusMessage');
+            if (isManual) {
+                statusMessage.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-blue-400"></i> Google Sheet မှ ဒေတာအသစ်များကို ဆွဲထုတ်နေပါသည်...`;
+                statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-blue-400";
+            }
+
+            try {
+                const response = await fetch(apiScriptUrl);
+                const rawRows = await response.json();
+
+                if (rawRows.error) throw new Error(rawRows.error);
+
+                let salesData = {};
+                staffList.forEach(s => {
+                    salesData[s] = {};
+                    categories.forEach(c => salesData[s][c] = 0);
+                });
+
+                let currentStaff = "";
+
+                for (let i = 0; i < rawRows.length; i++) {
+                    let row = rawRows[i];
+                    let colA = row.colA;
+                    let colB = row.colB;
+                    let colC = row.colC;
+                    let colD = row.colD;
+
+                    if (colA) currentStaff = colA; else colA = currentStaff;
+
+                    let matchedStaff = staffList.find(s => colA.toLowerCase().includes(s.toLowerCase()));
+
+                    if (matchedStaff && colB && colD > 0 && !colB.toLowerCase().includes('total') && !colA.toLowerCase().includes('total')) {
+                        let lowerCat = colB.toLowerCase();
+                        let lowerOpt = colC.toLowerCase();
+                        let combinedText = lowerCat + " " + lowerOpt;
+
+                        function addRecord(cat, qty) {
+                            if (salesData[matchedStaff] && salesData[matchedStaff][cat] !== undefined) {
+                                salesData[matchedStaff][cat] += qty;
+                            }
+                        }
+
+                        if (combinedText.includes('accessories') || combinedText.includes('accessory') || combinedText.includes('apple - accessories')) {
+                            addRecord("Accessories", colD);
+                            if (combinedText.includes('dead stock')) addRecord("Red zone", colD);
+                            if (combinedText.includes('premium stock') || combinedText.includes('premium')) addRecord("Premium", colD);
+                        } else {
+                            let primaryCat = "Accessories";
+                            if (combinedText.includes('iphone') || combinedText.includes('iphones')) primaryCat = "iPhone";
+                            else if (combinedText.includes('macbook') || combinedText.includes('mac')) primaryCat = "MacBook";
+                            else if (combinedText.includes('ipad')) primaryCat = "iPad";
+                            else if (combinedText.includes('watch')) primaryCat = "Watch";
+                            else if (combinedText.includes('airpod') || combinedText.includes('beat')) primaryCat = "Airpods & Beat";
+
+                            addRecord(primaryCat, colD);
+
+                            if (combinedText.includes('dead stock')) addRecord("Red zone", colD);
+                            if (combinedText.includes('premium stock') || combinedText.includes('premium')) addRecord("Premium", colD);
+                        }
+                    }
+                }
+
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                // Save to cache
+                localStorage.setItem('wzyt_sales_cache', JSON.stringify({ salesData: salesData, time: timeString }));
+
+                document.getElementById('lastSynced').innerText = "Last synced: " + timeString;
+                statusMessage.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> အောင်မြင်ပါသည်။ Google Sheet မှ အရောင်းစာရင်းများကို အလိုအလျောက် တွက်ချက်ပြီးပါပြီ။`;
+                statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-emerald-400";
+
+                renderSalesTable(salesData);
+
+            } catch (error) {
+                console.error(error);
+                if (isManual) {
+                    statusMessage.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-400"></i> ချိတ်ဆက်ရာတွင် အမှားဖြစ်နေပါသည်။ Google Apps Script URL ကို စစ်ဆေးပါ။`;
+                    statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-red-400";
+                }
+            }
+        }
+
+        function renderSalesTable(salesData) {
+            let html = `<table><thead><tr><th>Staff Name</th>`;
+            categories.forEach(c => html += `<th>${c}</th>`);
+            html += `</tr></thead><tbody>`;
+
+            staffList.forEach(staff => {
+                html += `<tr><td class="font-bold bg-white/5 text-slate-200">${staff}</td>`;
+                categories.forEach(cat => {
+                    let actual = salesData[staff][cat] || 0;
+                    html += `<td class="font-bold text-blue-400">${actual > 0 ? actual : ''}</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table>`;
+            document.getElementById('tableContainer').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
