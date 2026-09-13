@@ -144,7 +144,6 @@
         const categories = ["iPhone", "MacBook", "iPad", "Watch", "Airpods & Beat", "Accessories", "Premium", "Red zone"];
 
         window.onload = function() {
-            // Load cached data instantly if available
             const cachedData = localStorage.getItem('wzyt_sales_cache');
             if (cachedData) {
                 try {
@@ -155,7 +154,6 @@
                     document.getElementById('statusMessage').className = "mb-6 p-4 glass-card text-center text-xs text-emerald-400";
                 } catch(e) {}
             }
-            // Fetch fresh data in background
             fetchSalesData(false);
         };
 
@@ -200,14 +198,34 @@
 
                 for (let i = 0; i < rawRows.length; i++) {
                     let row = rawRows[i];
-                    let colA = row.colA;
-                    let colB = row.colB;
-                    let colC = row.colC;
-                    let colD = row.colD;
+                    let colA = String(row.colA || "").trim();
+                    let colB = String(row.colB || "").trim();
+                    let colC = String(row.colC || "").trim();
+                    let colD = parseFloat(row.colD) || 0;
 
-                    if (colA) currentStaff = colA; else colA = currentStaff;
+                    if (colA !== "") {
+                        currentStaff = colA; 
+                    } else {
+                        colA = currentStaff; // Merge cell ပြဿနာအတွက်
+                    }
 
-                    let matchedStaff = staffList.find(s => colA.toLowerCase().includes(s.toLowerCase()));
+                    let searchName = colA.toLowerCase().replace(/\s+/g, ' ');
+                    let matchedStaff = "";
+
+                    // ၁၀၀% သေချာစေမည့် "Smart Keyword Matching" စနစ် (စာလုံးပေါင်းမှားခြင်းများအတွက်)
+                    if (searchName.includes("thiha thu")) matchedStaff = "Thiha Thu";
+                    else if (searchName.includes("wai lwin")) matchedStaff = "Wai Lwin Aung";
+                    else if (searchName.includes("bo bo")) matchedStaff = "Bo Bo Aung Soe";
+                    else if (searchName.includes("sai htet")) matchedStaff = "Sai Htet Zaw";
+                    else if (searchName.includes("han win")) matchedStaff = "Han Win Htoo";
+                    else if (searchName.includes("phuu") || searchName.includes("akari")) matchedStaff = "Phuu Akari Zaw";
+                    else if (searchName.includes("phyu sin")) matchedStaff = "Phyu Sin Thwel";
+                    else if (searchName.includes("kyay") || searchName.includes("hmone") || searchName.includes("mhone")) matchedStaff = "Kyay Hmone Htoo";
+                    else if (searchName.includes("ye thiha")) matchedStaff = "Ye Thiha Aung";
+                    else if (searchName.includes("han htoo")) matchedStaff = "Han Htoo Sett";
+                    else if (searchName.includes("aung kaung") || searchName.includes("aung khaung")) matchedStaff = "Aung Kaung Pyae Phyo";
+                    else if (searchName.includes("aung pyae")) matchedStaff = "Aung Pyae Phyo";
+                    else if (searchName.includes("myo min")) matchedStaff = "Myo Min Htike";
 
                     if (matchedStaff && colB && colD > 0 && !colB.toLowerCase().includes('total') && !colA.toLowerCase().includes('total')) {
                         let lowerCat = colB.toLowerCase();
@@ -243,7 +261,6 @@
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
-                // Save to cache
                 localStorage.setItem('wzyt_sales_cache', JSON.stringify({ salesData: salesData, time: timeString }));
 
                 document.getElementById('lastSynced').innerText = "Last synced: " + timeString;
