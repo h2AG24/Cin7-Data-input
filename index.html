@@ -3,190 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xtrasure WZYT - September Sales Actuals</title>
-    <!-- Tailwind CSS -->
+    <title>Xtrasure WZYT - Sales Actuals</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: {} }
-        }
-    </script>
-    <!-- FontAwesome for iOS Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background: #050508;
+        /* Apple Typography */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            transition: background-color 0.5s ease, color 0.5s ease; 
+        }
+
+        /* --- Liquid Mesh Backgrounds --- */
+        body.dark {
+            background-color: #0b0f19;
             color: #f5f5f7;
-            min-height: 100vh;
-            overflow-x: hidden;
-            transition: background 0.4s, color 0.4s;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(58, 65, 198, 0.4), transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(0, 162, 255, 0.3), transparent 45%);
+            background-attachment: fixed;
         }
-        .light body { background: #f0f2f5; color: #1d1d1f; }
-
-        /* iOS Liquid Glass Background Orbs */
-        .liquid-bg {
-            position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -1; overflow: hidden; pointer-events: none;
-        }
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.4; animation: floatOrb 18s infinite alternate ease-in-out;
-        }
-        .orb-1 { width: 550px; height: 550px; background: #007aff; top: -150px; left: -100px; }
-        .orb-2 { width: 650px; height: 650px; background: #bf5af2; bottom: -200px; right: -100px; animation-delay: -6s; }
-        .orb-3 { width: 450px; height: 450px; background: #30b0c7; top: 35%; left: 40%; animation-delay: -12s; opacity: 0.3; }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(60px, 80px) scale(1.2); }
+        body.light {
+            background-color: #e6ecf2;
+            color: #1d1d1f;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 122, 255, 0.12), transparent 45%),
+                radial-gradient(circle at 85% 30%, rgba(90, 200, 250, 0.12), transparent 45%);
+            background-attachment: fixed;
         }
 
-        /* 2-Layer Liquid Glass Card */
-        .glass-card {
+        /* --- Apple 2-Layer Liquid Glass Effect --- */
+        /* Outer Layer */
+        .glass-card-outer {
             position: relative;
-            background: rgba(255, 255, 255, 0.025);
-            backdrop-filter: blur(50px);
-            -webkit-backdrop-filter: blur(50px);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
             border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1.5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 24px;
+        }
+        .light .glass-card-outer {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top: 1.5px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* Inner Layer */
+        .glass-layer-inner {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
-        .glass-card::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
-            pointer-events: none; border-radius: inherit;
-        }
-        .light .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+        .light .glass-layer-inner {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
         }
 
-        .ios-btn {
-            background: linear-gradient(135deg, #0a84ff, #0062d2);
+        /* --- Apple Pill Buttons --- */
+        .apple-pill-btn {
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 25px rgba(10, 132, 255, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            transition: all 0.3s;
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
-        .ios-btn:hover { filter: brightness(1.1); }
-        .ios-btn:active { transform: scale(0.96); }
+        .apple-pill-btn:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-1px); }
+        .apple-pill-btn:active { transform: scale(0.96); }
+        
+        .light .apple-pill-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            color: #1d1d1f;
+        }
+        .light .apple-pill-btn:hover { background: rgba(255, 255, 255, 1); }
 
-        /* Table Styles */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th, td { border: 1px solid rgba(255, 255, 255, 0.1); padding: 9px 12px; text-align: center; font-size: 11px; }
-        .light th, .light td { border-color: rgba(0, 0, 0, 0.1); }
-        th { background: rgba(255, 255, 255, 0.05); font-weight: bold; color: #38bdf8; }
-        .light th { background: rgba(0, 0, 0, 0.05); color: #0284c7; }
+        .sync-btn-primary {
+            background: linear-gradient(135deg, #007aff, #0056b3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            color: white !important;
+        }
+
+        /* --- Custom Table Fixes --- */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { 
+            padding: 14px 16px; 
+            text-align: center; 
+            font-size: 11.5px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .light th, .light td { 
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+        }
+        
+        th { 
+            background: rgba(255, 255, 255, 0.04); 
+            font-weight: 600; 
+            color: #94a3b8; 
+            letter-spacing: 0.3px;
+        }
+        .light th { background: rgba(0, 0, 0, 0.03); color: #475569; }
+
+        .staff-cell {
+            font-weight: 700;
+            color: #ffffff; 
+            background: rgba(255, 255, 255, 0.03);
+            letter-spacing: 0.2px;
+        }
+        .light .staff-cell {
+            color: #1e293b !important; 
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .val-cell {
+            font-weight: 600;
+            color: #38bdf8; 
+        }
+        .light .val-cell {
+            color: #007aff !important; 
+        }
+        
+        .table-title { color: #cbd5e1; font-size: 11px; letter-spacing: 1px; }
+        .light .table-title { color: #475569; }
     </style>
 </head>
-<body class="p-4 md:p-8 antialiased">
-
-    <!-- Liquid Glass Floating Orbs Background -->
-    <div class="liquid-bg">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
-
+<body class="dark p-4 md:p-8">
+    
     <div class="max-w-6xl mx-auto relative z-10">
-        <!-- Top Navigation Bar -->
-        <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-            <button onclick="fetchSalesData(true)" class="flex items-center gap-2 ios-btn px-5 py-2.5 rounded-full text-xs font-semibold text-white cursor-pointer">
+        
+        <!-- Top Controls -->
+        <div class="flex flex-wrap justify-between items-center mb-8 gap-4">
+            <button onclick="fetchSalesData(true)" class="flex items-center gap-2 apple-pill-btn sync-btn-primary px-6 py-2.5 rounded-full text-xs font-semibold cursor-pointer">
                 <i class="fa-solid fa-arrows-rotate"></i> Sync Sales Data
             </button>
-            <div class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium glass-card text-emerald-400">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Lightning Fast Mode
+            
+            <div class="flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold apple-pill-btn text-emerald-400 dark:text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Sync Active
             </div>
+            
             <!-- Theme Toggles -->
-            <div class="flex glass-card p-1 text-xs font-medium">
-                <button onclick="setTheme('dark')" id="darkBtn" class="px-3 py-1.5 rounded-full text-slate-400 transition">Dark</button>
-                <button onclick="setTheme('auto')" id="autoBtn" class="px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition">Auto</button>
-                <button onclick="setTheme('light')" id="lightBtn" class="px-3 py-1.5 rounded-full text-slate-400 transition">Light</button>
+            <div class="flex apple-pill-btn p-1 text-xs font-medium rounded-full">
+                <button onclick="setTheme('dark')" id="darkBtn" class="px-4 py-1.5 rounded-full transition">Dark</button>
+                <button onclick="setTheme('auto')" id="autoBtn" class="px-4 py-1.5 rounded-full bg-blue-500 text-white shadow transition">Auto</button>
+                <button onclick="setTheme('light')" id="lightBtn" class="px-4 py-1.5 rounded-full transition">Light</button>
             </div>
         </div>
 
-        <!-- Header Title -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1"><i class="fa-brands fa-apple text-blue-500"></i> Xtrasure WZYT Sales Actuals For September</h1>
-        </div>
-        
-        <!-- Status Notification Card -->
-        <div class="mb-6 p-4 glass-card text-center text-xs" id="statusMessage">
-            <i class="fa-solid fa-bolt text-amber-400"></i> ဒေတာများကို အမြန်ဆုံး တင်ဆောင်နေပါသည်...
+        <div class="text-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1">
+                <i class="fa-brands fa-apple text-blue-500"></i> Xtrasure WZYT Sales Actuals
+            </h1>
         </div>
 
-        <!-- Sales Actuals Table Section -->
-        <div class="glass-card p-4 overflow-x-auto">
-            <div class="flex justify-between items-center mb-3 px-2">
-                <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider"><i class="fa-solid fa-table"></i> Staff Sales Actuals Matrix</h2>
-                <span id="lastSynced" class="text-[11px] text-slate-400"></span>
+        <!-- 2-Layer Liquid Glass Container -->
+        <div class="glass-card-outer mb-8">
+            
+            <div class="flex justify-between items-center mb-5 px-2">
+                <h2 class="font-bold uppercase table-title"><i class="fa-solid fa-layer-group"></i> Staff Sales Matrix</h2>
+                <span id="lastSynced" class="text-[11px] text-slate-400 dark:text-slate-400 font-medium"></span>
             </div>
-            <div id="tableContainer">
-                <div class="text-center text-slate-400 py-10 text-xs">
-                    <i class="fa-solid fa-cloud-arrow-down text-2xl mb-2 text-blue-500 block"></i>
-                    ဒေတာများ တွက်ချက်နေပါသည်...
-                </div>
+            
+            <div class="mb-5 text-center text-xs" id="statusMessage">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full apple-pill-btn text-amber-400">
+                    <i class="fa-solid fa-bolt"></i> Loading data...
+                </span>
             </div>
+
+            <!-- Inner Layer (Deep Glass for Table) -->
+            <div class="glass-layer-inner overflow-x-auto">
+                <div id="tableContainer"></div>
+            </div>
+            
         </div>
     </div>
 
     <script>
-        const apiScriptUrl = "https://script.google.com/macros/s/AKfycbwLj8fUyx_ClYgcGN_5pZzERSd5mPfyAxsuN5eYkRsFDkIOKitl3aPAtG5MNX4REoFZPw/exec";
+        // သားရီးရဲ့ လင့်ခ်အသစ်ကို ထည့်ပေးထားပါတယ်
+        const apiScriptUrl = "https://script.google.com/macros/s/AKfycbwupeHn4aG_ds6rGa8C4LRO4S4MA4qNyrgs3klp1ClyHPXWcLy8Zxv_m2oJsA2c_rC5rA/exec";
 
         const staffList = [
             "Thiha Thu", "Wai Lwin Aung", "Bo Bo Aung Soe", "Sai Htet Zaw", 
             "Han Win Htoo", "Phuu Akari Zaw", "Phyu Sin Thwel", "Kyay Hmone Htoo", 
             "Ye Thiha Aung", "Han Htoo Sett", "Aung Pyae Phyo", "Aung Kaung Pyae Phyo", "Myo Min Htike"
         ];
-
         const categories = ["iPhone", "MacBook", "iPad", "Watch", "Airpods & Beat", "Accessories", "Premium", "Red zone"];
 
         window.onload = function() {
-            const cachedData = localStorage.getItem('wzyt_sales_cache');
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    renderSalesTable(parsed.salesData);
-                    document.getElementById('lastSynced').innerText = "Last synced: " + parsed.time;
-                    document.getElementById('statusMessage').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> Local Cache မှ ဒေတာများကို ချက်ချင်း တင်ပြီးပါပြီ။`;
-                    document.getElementById('statusMessage').className = "mb-6 p-4 glass-card text-center text-xs text-emerald-400";
-                } catch(e) {}
-            }
             fetchSalesData(false);
         };
 
-        function setTheme(mode) {
-            const root = document.documentElement;
-            document.getElementById('darkBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
-            document.getElementById('autoBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
-            document.getElementById('lightBtn').className = "px-3 py-1.5 rounded-full text-slate-400 transition";
+        function updateStatus(html, darkColor, lightColor = darkColor) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = `<span class="inline-flex items-center gap-2 px-4 py-2 rounded-full apple-pill-btn ${darkColor} light:text-blue-600">${html}</span>`;
+        }
 
+        function setTheme(mode) {
+            const root = document.body;
+            const btnClass = "px-4 py-1.5 rounded-full transition text-slate-400 light:text-slate-500";
+            const activeClass = "px-4 py-1.5 rounded-full bg-blue-500 text-white shadow transition";
+            
+            document.getElementById('darkBtn').className = btnClass;
+            document.getElementById('autoBtn').className = btnClass;
+            document.getElementById('lightBtn').className = btnClass;
+            
             if (mode === 'light') {
                 root.classList.remove('dark'); root.classList.add('light');
-                document.getElementById('lightBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+                document.getElementById('lightBtn').className = activeClass;
             } else if (mode === 'dark') {
                 root.classList.add('dark'); root.classList.remove('light');
-                document.getElementById('darkBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+                document.getElementById('darkBtn').className = activeClass;
             } else {
                 root.classList.remove('light'); root.classList.add('dark');
-                document.getElementById('autoBtn').className = "px-3 py-1.5 rounded-full bg-blue-600 text-white shadow transition";
+                document.getElementById('autoBtn').className = activeClass;
             }
         }
 
         async function fetchSalesData(isManual = false) {
-            const statusMessage = document.getElementById('statusMessage');
             if (isManual) {
-                statusMessage.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-blue-400"></i> Google Sheet မှ ဒေတာအသစ်များကို ဆွဲထုတ်နေပါသည်...`;
-                statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-blue-400";
+                updateStatus(`<i class="fa-solid fa-spinner fa-spin"></i> Fetching data from Sheet...`, 'text-blue-400');
             }
-
             try {
                 const response = await fetch(apiScriptUrl);
-                const rawRows = await response.json();
-
-                if (rawRows.error) throw new Error(rawRows.error);
+                const jsonData = await response.json();
+                if (jsonData.error) throw new Error(jsonData.error);
 
                 let salesData = {};
                 staffList.forEach(s => {
@@ -194,87 +244,45 @@
                     categories.forEach(c => salesData[s][c] = 0);
                 });
 
-                let currentStaff = "";
+                jsonData.forEach(item => {
+                    let rawName = String(item.name || "").trim();
+                    let catName = String(item.category || "").trim();
+                    let actualValue = parseFloat(item.total) || 0;
+                    
+                    if (catName === "Airpods And Beat") catName = "Airpods & Beat";
 
-                for (let i = 0; i < rawRows.length; i++) {
-                    let row = rawRows[i];
-                    let colA = String(row.colA || "").trim();
-                    let colB = String(row.colB || "").trim();
-                    let colC = String(row.colC || "").trim();
-                    let colD = parseFloat(row.colD) || 0;
-
-                    if (colA !== "") {
-                        currentStaff = colA; 
-                    } else {
-                        colA = currentStaff; // Merge cell ပြဿနာအတွက်
-                    }
-
-                    let searchName = colA.toLowerCase().replace(/\s+/g, ' ');
+                    let cleanA = rawName.toLowerCase().replace(/\s+/g, '');
                     let matchedStaff = "";
-
-                    // ၁၀၀% သေချာစေမည့် "Smart Keyword Matching" စနစ် (စာလုံးပေါင်းမှားခြင်းများအတွက်)
-                    if (searchName.includes("thiha thu")) matchedStaff = "Thiha Thu";
-                    else if (searchName.includes("wai lwin")) matchedStaff = "Wai Lwin Aung";
-                    else if (searchName.includes("bo bo")) matchedStaff = "Bo Bo Aung Soe";
-                    else if (searchName.includes("sai htet")) matchedStaff = "Sai Htet Zaw";
-                    else if (searchName.includes("han win")) matchedStaff = "Han Win Htoo";
-                    else if (searchName.includes("phuu") || searchName.includes("akari")) matchedStaff = "Phuu Akari Zaw";
-                    else if (searchName.includes("phyu sin")) matchedStaff = "Phyu Sin Thwel";
-                    else if (searchName.includes("kyay") || searchName.includes("hmone") || searchName.includes("mhone")) matchedStaff = "Kyay Hmone Htoo";
-                    else if (searchName.includes("ye thiha")) matchedStaff = "Ye Thiha Aung";
-                    else if (searchName.includes("han htoo")) matchedStaff = "Han Htoo Sett";
-                    else if (searchName.includes("aung kaung") || searchName.includes("aung khaung")) matchedStaff = "Aung Kaung Pyae Phyo";
-                    else if (searchName.includes("aung pyae")) matchedStaff = "Aung Pyae Phyo";
-                    else if (searchName.includes("myo min")) matchedStaff = "Myo Min Htike";
-
-                    if (matchedStaff && colB && colD > 0 && !colB.toLowerCase().includes('total') && !colA.toLowerCase().includes('total')) {
-                        let lowerCat = colB.toLowerCase();
-                        let lowerOpt = colC.toLowerCase();
-                        let combinedText = lowerCat + " " + lowerOpt;
-
-                        function addRecord(cat, qty) {
-                            if (salesData[matchedStaff] && salesData[matchedStaff][cat] !== undefined) {
-                                salesData[matchedStaff][cat] += qty;
-                            }
-                        }
-
-                        if (combinedText.includes('accessories') || combinedText.includes('accessory') || combinedText.includes('apple - accessories')) {
-                            addRecord("Accessories", colD);
-                            if (combinedText.includes('dead stock')) addRecord("Red zone", colD);
-                            if (combinedText.includes('premium stock') || combinedText.includes('premium')) addRecord("Premium", colD);
-                        } else {
-                            let primaryCat = "Accessories";
-                            if (combinedText.includes('iphone') || combinedText.includes('iphones')) primaryCat = "iPhone";
-                            else if (combinedText.includes('macbook') || combinedText.includes('mac')) primaryCat = "MacBook";
-                            else if (combinedText.includes('ipad')) primaryCat = "iPad";
-                            else if (combinedText.includes('watch')) primaryCat = "Watch";
-                            else if (combinedText.includes('airpod') || combinedText.includes('beat')) primaryCat = "Airpods & Beat";
-
-                            addRecord(primaryCat, colD);
-
-                            if (combinedText.includes('dead stock')) addRecord("Red zone", colD);
-                            if (combinedText.includes('premium stock') || combinedText.includes('premium')) addRecord("Premium", colD);
-                        }
+                    
+                    if (cleanA.includes("thiha") && !cleanA.includes("ye")) matchedStaff = "Thiha Thu";
+                    else if (cleanA.includes("wailwin")) matchedStaff = "Wai Lwin Aung";
+                    else if (cleanA.includes("bobo")) matchedStaff = "Bo Bo Aung Soe";
+                    else if (cleanA.includes("saihtet")) matchedStaff = "Sai Htet Zaw";
+                    else if (cleanA.includes("hanwin")) matchedStaff = "Han Win Htoo";
+                    else if (cleanA.includes("akari")) matchedStaff = "Phuu Akari Zaw";
+                    else if (cleanA.includes("phyusin")) matchedStaff = "Phyu Sin Thwel";
+                    else if (cleanA.includes("kyay") || cleanA.includes("hmone") || cleanA.includes("mhone") || cleanA.includes("hmon")) matchedStaff = "Kyay Hmone Htoo";
+                    else if (cleanA.includes("yethiha")) matchedStaff = "Ye Thiha Aung";
+                    else if (cleanA.includes("hanhtoo")) matchedStaff = "Han Htoo Sett";
+                    else if (cleanA.includes("aungkaung") || cleanA.includes("aungkhaung")) matchedStaff = "Aung Kaung Pyae Phyo";
+                    else if (cleanA.includes("aungpyae")) matchedStaff = "Aung Pyae Phyo";
+                    else if (cleanA.includes("myomin")) matchedStaff = "Myo Min Htike";
+                    
+                    if (matchedStaff && salesData[matchedStaff] && salesData[matchedStaff][catName] !== undefined) {
+                        salesData[matchedStaff][catName] = actualValue;
                     }
-                }
+                });
 
                 const now = new Date();
                 const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                localStorage.setItem('wzyt_sales_cache', JSON.stringify({ salesData: salesData, time: timeString }));
-
                 document.getElementById('lastSynced').innerText = "Last synced: " + timeString;
-                statusMessage.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> အောင်မြင်ပါသည်။ Google Sheet မှ အရောင်းစာရင်းများကို အလိုအလျောက် တွက်ချက်ပြီးပါပြီ။`;
-                statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-emerald-400";
-
+                
+                updateStatus(`<i class="fa-solid fa-check-circle"></i> Success. Target Actuals are accurately displayed.`, 'text-emerald-400');
+                
                 renderSalesTable(salesData);
-
             } catch (error) {
                 console.error(error);
-                if (isManual) {
-                    statusMessage.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-400"></i> ချိတ်ဆက်ရာတွင် အမှားဖြစ်နေပါသည်။ Google Apps Script URL ကို စစ်ဆေးပါ။`;
-                    statusMessage.className = "mb-6 p-4 glass-card text-center text-xs text-red-400";
-                }
+                updateStatus(`<i class="fa-solid fa-xmark-circle"></i> Connection error. Data could not be loaded.`, 'text-red-400');
             }
         }
 
@@ -282,16 +290,16 @@
             let html = `<table><thead><tr><th>Staff Name</th>`;
             categories.forEach(c => html += `<th>${c}</th>`);
             html += `</tr></thead><tbody>`;
-
+            
             staffList.forEach(staff => {
-                html += `<tr><td class="font-bold bg-white/5 text-slate-200">${staff}</td>`;
+                html += `<tr><td class="staff-cell">${staff}</td>`;
                 categories.forEach(cat => {
                     let actual = salesData[staff][cat] || 0;
-                    html += `<td class="font-bold text-blue-400">${actual > 0 ? actual : ''}</td>`;
+                    html += `<td class="val-cell">${actual > 0 ? actual : ''}</td>`;
                 });
                 html += `</tr>`;
             });
-
+            
             html += `</tbody></table>`;
             document.getElementById('tableContainer').innerHTML = html;
         }
